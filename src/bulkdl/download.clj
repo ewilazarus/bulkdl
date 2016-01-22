@@ -53,12 +53,15 @@
           (str "FAIL (Unexpected error)")))
 
 (defn download! [input target-dir cb]
-  (let [dir (.getAbsolutePath (output-dir target-dir))]
-    (cond (not (create-output-dir dir)) (cb (compose-msg nil nil :cant-create-dir))
-          (not (.exists (io/as-file input))) (cb (compose-msg nil nil :inexistent-list))
-          :else (doseq [url (get-download-list input)]
-                  (let [file (output-file dir url)
-                        status (cond (not (valid-url? url)) :invalid-url
-                                     (.exists (io/as-file file)) :already-exists
-                                     :else (fetch-resource! url file))]
-                    (cb (compose-msg url file status)))))))
+  (.start
+    (Thread. 
+      (fn [] (let [dir (.getAbsolutePath (output-dir target-dir))]
+               (cond 
+                 (not (create-output-dir dir)) (cb (compose-msg nil nil :cant-create-dir))
+                 (not (.exists (io/as-file input))) (cb (compose-msg nil nil :inexistent-list))
+                 :else (doseq [url (get-download-list input)]
+                         (let [file (output-file dir url)
+                               status (cond (not (valid-url? url)) :invalid-url
+                                            (.exists (io/as-file file)) :already-exists
+                                            :else (fetch-resource! url file))]
+                           (cb (compose-msg url file status))))))))))

@@ -140,6 +140,6 @@
                           (if-not (and (s/blank? filename) 
                                        (s/blank? target-dir))
                             (do (clean-details)
-                                (download/download! filename
-                                                    target-dir
+                                (download/download! filename 
+                                                    target-dir 
                                                     gui-callback))))))
