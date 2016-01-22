@@ -1,6 +1,8 @@
 # bulkdl
 
-A utility software to download resources in bulk from the internet via HTTP(S).
+![GUI screenshot](resources/screenshot.png)
+
+An utility software to download resources in bulk from the internet via HTTP(S).
 
 ## Usage
 
